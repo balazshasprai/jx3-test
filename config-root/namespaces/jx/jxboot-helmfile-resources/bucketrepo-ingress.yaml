@@ -1,0 +1,28 @@
+# Source: jxboot-helmfile-resources/templates/700-bucketrepo-ing.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: cloudflare-issuer
+    kubernetes.io/ingress.class: external
+    meta.helm.sh/release-name: 'jxboot-helmfile-resources'
+    meta.helm.sh/release-namespace: 'jx'
+  name: bucketrepo
+  namespace: jx
+  labels:
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: ImplementationSpecific
+        backend:
+          service:
+            name: bucketrepo
+            port:
+              number: 80
+    host: bucketrepo-jx.bhas.io
+  tls:
+  - hosts:
+    - bucketrepo-jx.bhas.io
+    secretName: "tls-bhas-io-p"
